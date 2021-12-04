@@ -1,0 +1,6 @@
+Boston London 3.00
+London Mumbai 4.50
+Mumbai Shanghai 3.10
+Shanghai London 5.7
+Boston Mumbai 7.6
+Boston Shanghai 7.8
