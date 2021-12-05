@@ -6,8 +6,9 @@ Created on Sat Dec  4 10:35:47 2021
 @author: liulian
 """
 import numpy as np
+from GA import GA
 
-class TSP():
+class TSP(object):
     cityCount = 0;
     numberCityMap = {};
     cityNumberMap = {};
@@ -17,8 +18,9 @@ class TSP():
         self.startCity = startCity;
         self.initData();
         self.sample = sample;
+        self.ga = GA(self.cityCount,self.sample)
         
-    # read the data from txt file and put them into a Map, and 2D distance array
+    # read the data from txt file and process the data
     def initData(self):
         cities = set();
         distanceMap = {};
@@ -37,6 +39,7 @@ class TSP():
         self.cityCount = len(cities);
         self.buildCityMap(cities);
         self.buildDistanceMatrix(distanceMap);
+        
   
     """
        build the map with number and city  
@@ -62,7 +65,7 @@ class TSP():
          [7.6 3.1 0.  4.5]
          [3.  5.7 4.5 0. ]]
     {0: 'Boston', 1: 'Shanghai', 2: 'Mumbai', 3: 'London'}
-    matrix[1][0]= 7.8 represent the distance between Shanghai and Bostone is 7.8
+    matrix[1][0]= 7.8 represent the distance between Shanghai and Boston is 7.8
     """
     
     def buildDistanceMatrix(self, distanceMap):
@@ -73,13 +76,17 @@ class TSP():
            y = self.cityNumberMap[temp[1]];
            self.distanceMatrix[x,y] = distanceMap[key];
            self.distanceMatrix[y,x] = distanceMap[key];
-           
-       print(self.distanceMatrix);
-            
+
+    """
+    run the GA with times
+    """
+    def run(self, times):
+        self.ga(self.cityCount, times);
+        
             
 def main():
-    tsp= TSP(100,'Boston');
-    #tsp.run(100);
+    tsp= TSP(3,'Boston');
+    #tsp.run(3);
 
 if  __name__ == '__main__':
     main()
