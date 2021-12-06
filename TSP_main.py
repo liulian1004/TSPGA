@@ -13,12 +13,14 @@ class TSP(object):
     numberCityMap = {};
     cityNumberMap = {};
     distanceMatrix = None;
-    startCity = ""
+    startCity = "";
+    crossoverRate = 0.6;
+    mutationRate = 0.001;
     def __init__(self, sample, startCity):
         self.startCity = startCity;
         self.initData();
         self.sample = sample;
-        self.ga = GA(self.cityCount,self.sample)
+        self.ga = GA(self.cityCount,self.sample, self.distanceMatrix)
         
     # read the data from txt file and process the data
     def initData(self):
@@ -76,17 +78,45 @@ class TSP(object):
            y = self.cityNumberMap[temp[1]];
            self.distanceMatrix[x,y] = distanceMap[key];
            self.distanceMatrix[y,x] = distanceMap[key];
-
+    
+    
     """
     run the GA with times
+    
+    
+    def initRandomData(self):
+    """
+    
+    """
+    run the GA with times
+    
     """
     def run(self, times):
-        self.ga(self.cityCount, times);
-        
+        while times > 0:
+            self.ga.nextGeneration();
+            best = self.ga.best
+            route = [];
+            for city in best.route:
+                route.append(self.numberCityMap[city])
+            print("best route is")
+            print(route)
+            print("with %f"%(best.distance))
+            times -= 1;
+            
+    
+    def evulationFuntion(self, life):
+        distance = 0.0
+        for i in range(0, len(life)-2):
+            index1, index2 = life[i], life[i+1]
+            distance += self.distanceMatrix[index1,index2];
+        print(distance)
+        return 1/distance;
             
 def main():
     tsp= TSP(3,'Boston');
-    #tsp.run(3);
+    #print(tsp.evulationFuntion([0,1,2,3,0]))
+    #print(tsp.evulationFuntion([0, 3, 2, 1, 0]))
+    tsp.run(10);
 
 if  __name__ == '__main__':
     main()
