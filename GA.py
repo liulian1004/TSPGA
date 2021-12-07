@@ -6,7 +6,7 @@ Created on Sat Dec  4 15:14:44 2021
 @author: liulian
 """
 import random
-import numpy as np
+
 
 from LIFE import Life
 
@@ -28,8 +28,9 @@ class GA(object):
     
     
     """  
-    generate the sample number of random path, current I will generate 100 sample
-    ex: one of random path:[0,1,2,3,0]
+    generate the sample number of random path, the number of sample passed by TSP_main
+    ex: one of random path for 4 cities and start and end at city 0
+    [0,1,2,3,0]
     """
     def initPopulation(self):
         self.population = [];
@@ -45,7 +46,6 @@ class GA(object):
                 route.append(number);
             route.append(0);
             life = Life(route);
-            print(life.route)
             self.population.append(life);
         
         
@@ -107,7 +107,6 @@ class GA(object):
             index1, index2 = life.route[i], life.route[i+1]
             distance += self.distanceMatrix[index1,index2];
             
-        #print(distance)
         life.distance = distance;
         return 1/distance;
     
@@ -118,7 +117,6 @@ class GA(object):
     """
     
     def evaluation(self):
-        #curRate = - 1.0;
         #init the first route is the best and calcuate its score
         self.best = self.population[0];
         self.best.rate = self.calculateRate(self.best);
@@ -127,10 +125,6 @@ class GA(object):
             # upate the best route if the cur one is better
             if self.best.rate < life.rate:
                 self.best = life;
-        #print("best")
-        #print(self.best.route)
-        #print(self.best.rate)
-        #print(self.best.distance)
 
     
     """ 
@@ -147,22 +141,16 @@ class GA(object):
     """ 
     def generateChild(self):
         parent1 = self.pickUpParent();
-        #print(parent1.route)
         rate1 = random.uniform(0, 1);
-        #print(rate1)
         if rate1 < self.crossoverRate:
             parent2 = self.pickUpParent();
-            #print(parent2.route)
             child = self.crossOver(parent1, parent2);
-        #print(child.route)
         else:
             child = parent1;
             
         rate2 = random.uniform(0, 1);
-        #print(rate2)
         if rate2 < self.mutationRate:
             self.mutation(child);
-        #print(child.route)
         return child;
     
     """ 
@@ -173,35 +161,11 @@ class GA(object):
     """ 
     def nextGeneration(self):
         #find the best route in this poupluation
-        #print("next generate")
         self.evaluation();
         nextPopuluation = [];
         nextPopuluation.append(self.best);
-        #print(nextPopuluation[0].route)
         while len(nextPopuluation) < self.samples:
             nextPopuluation.append(self.generateChild());
-            #print(nextPopuluation[len(nextPopuluation)-1].route)
         self.population = nextPopuluation;
    
-                
-def main():
-    matrix = np.matrix([[0.0, 7.8, 7.6, 3.0],
-         [7.8, 0.0, 3.1, 5.7],
-         [7.6, 3.1, 0.0, 4.5],
-         [3.0, 5.7, 4.5,0.0]]);
-   
-    ga = GA(4,10, matrix);
-    #p1 = [0,1,2,3,0];
-    p2 = [0, 3, 2, 1, 0];
-    life= Life(p2)
-    #print(GA.crossOver(ga,p1, p2))
-    #print(GA.mutation(ga, p1))
-    #ga.evulationFuntion(p1)
-    print(ga.calculateRate(life))
-    #ga.nextGeneration()
-    
-
-if  __name__ == '__main__':
-    main()
-
         
