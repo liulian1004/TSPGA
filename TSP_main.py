@@ -7,6 +7,7 @@ Created on Sat Dec  4 10:35:47 2021
 """
 import numpy as np
 from GA import GA
+from Other_GA_Implementation import Other_GA_Implementation;
 import random
 
 class TSP(object):
@@ -24,7 +25,8 @@ class TSP(object):
         self.cityCount = cities;
         #self.initData();
         self.initRandomData();
-        self.ga = GA(self.cityCount,self.sample, self.distanceMatrix)
+        self.ga_1 = GA(self.cityCount,self.sample, self.distanceMatrix)
+        self.ga_2 = Other_GA_Implementation(self.cityCount,self.sample, self.distanceMatrix)
         
     # read the data from txt file and process the data
     def initData(self):
@@ -121,8 +123,8 @@ class TSP(object):
     """
     def run(self, times):
         while times > 0:
-            self.ga.nextGeneration();
-            best = self.ga.best
+            self.ga_1.nextGeneration();
+            best = self.ga_1.best
             route = [];
             for city in best.route:
                 route.append(self.numberCityMap[city])
@@ -139,19 +141,26 @@ class TSP(object):
     """
     def runSelfData(self, times):
         while times > 0:
-            self.ga.nextGeneration();
-            best = self.ga.best
+            self.ga_1.nextGeneration();
+            best_1 = self.ga_1.best
+            print("self implementation")
             print("best route is")
-            print(best.route)
-            print("with %f"%(best.distance))
+            print(best_1.route)
+            print("with %f"%(best_1.distance))
+            self.ga_2.nextGeneration();
+            best_2 = self.ga_2.best
+            print("other's implementation")
+            print("best route is")
+            print(best_2.route)
+            print("with %f"%(best_2.distance))
             times -= 1;
     
             
 def main():
-    samples = 100;
+    samples = 10;
     cities = 10;
     tsp= TSP(samples,cities,'Boston');
-    tsp.runSelfData(10)
+    tsp.runSelfData(100)
     #tsp.run(10);
 
 if  __name__ == '__main__':
